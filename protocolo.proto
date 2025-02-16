@@ -17,12 +17,14 @@ service CarRental {
 }
 
 message TripRequest {
-    string trip_type = 1; // "one_way" or "round_trip"
+    string trip_type = 1;
     string origin = 2;
     string destination = 3;
     string departure_date = 4;
     string return_date = 5;
     int32 num_people = 6;
+    int32 num_car = 7;
+    int32 num_room = 8;
 }
 
 message TripResponse {
@@ -37,6 +39,8 @@ message FlightRequest {
     string departure_date = 4;
     string return_date = 5;
     int32 num_people = 6;
+    int32 num_car = 7;
+    int32 num_room = 8;
 }
 
 message FlightResponse {
@@ -49,6 +53,7 @@ message HotelRequest {
     string check_in_date = 2;
     string check_out_date = 3;
     int32 num_people = 4;
+    int32 num_room = 5;
 }
 
 message HotelResponse {
@@ -60,7 +65,7 @@ message CarRequest {
     string destination = 1;
     string pick_up_date = 2;
     string drop_off_date = 3;
-    int32 num_people = 4;
+    int32 num_car = 4;
 }
 
 message CarResponse {
