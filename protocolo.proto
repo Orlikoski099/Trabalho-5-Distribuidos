@@ -2,22 +2,26 @@ syntax = "proto3";
 
 service TravelAgency {
     rpc BookTrip (TripRequest) returns (TripResponse) {}
+    rpc CancelBookTrip (CancelTripRequest) returns (CancelTripResponse) {}
 }
 
 service Airline {
     rpc BookFlight (FlightRequest) returns (FlightResponse) {}
+    rpc CancelFlight (CancelFlightRequest) returns (CancelFlightResponse) {}
 }
 
 service Hotel {
     rpc BookHotel (HotelRequest) returns (HotelResponse) {}
+    rpc CancelHotel (CancelHotelRequest) returns (CancelHotelResponse) {}
 }
 
 service CarRental {
     rpc BookCar (CarRequest) returns (CarResponse) {}
+    rpc CancelCar (CancelCarRequest) returns (CancelCarResponse) {}
 }
 
 message TripRequest {
-    string trip_type = 1; // "one_way" or "round_trip"
+    string trip_type = 1; // "one_way" ou "round_trip"
     string origin = 2;
     string destination = 3;
     string departure_date = 4;
@@ -28,6 +32,14 @@ message TripRequest {
 message TripResponse {
     string status = 1;
     string details = 2;
+}
+
+message CancelTripRequest {
+    string trip_id = 1;
+}
+
+message CancelTripResponse {
+    string status = 1;
 }
 
 message FlightRequest {
@@ -42,6 +54,16 @@ message FlightRequest {
 message FlightResponse {
     string status = 1;
     string flight_details = 2;
+    string flight_id = 3; // Adicionando o flight_id para o cancelamento
+}
+
+message CancelFlightRequest {
+    string flight_id = 1;
+}
+
+message CancelFlightResponse {
+    string status = 1;
+    string message = 2; // Mensagem para informar o status do cancelamento
 }
 
 message HotelRequest {
@@ -54,6 +76,16 @@ message HotelRequest {
 message HotelResponse {
     string status = 1;
     string hotel_details = 2;
+    string hotel_id = 3; // Adicionando o hotel_id para o cancelamento
+}
+
+message CancelHotelRequest {
+    string hotel_id = 1;
+}
+
+message CancelHotelResponse {
+    string status = 1;
+    string message = 2; // Mensagem para informar o status do cancelamento
 }
 
 message CarRequest {
@@ -66,4 +98,14 @@ message CarRequest {
 message CarResponse {
     string status = 1;
     string car_details = 2;
+    string car_id = 3; // Adicionando o car_id para o cancelamento
+}
+
+message CancelCarRequest {
+    string car_id = 1;
+}
+
+message CancelCarResponse {
+    string status = 1;
+    string message = 2; // Mensagem para informar o status do cancelamento
 }
