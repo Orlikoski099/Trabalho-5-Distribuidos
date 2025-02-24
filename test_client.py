@@ -22,6 +22,7 @@ def check_server_ready():
 def test_full_trip_reservation():
     try:
         request = protocolo_pb2.TripRequest(
+            user_id="12345",
             trip_type="round_trip",
             origin="Curitiba",
             destination="São Paulo",
@@ -29,6 +30,18 @@ def test_full_trip_reservation():
             return_date="2024-10-20",
             num_people=2
         )
+
+        # Validação de dados ausentes
+        if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
+            print("Erro: Dados ausentes na solicitação de viagem.")
+            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
+
+        # Validação adicional para one_way (onde a data de volta pode ser ausente)
+        if request.trip_type != "one_way" and not request.return_date:
+            print("Erro: Data de retorno ausente na solicitação de viagem.")
+            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
+
+        print("Dados da viagem validados com sucesso.")
 
         with grpc.insecure_channel('localhost:50051') as channel:
             stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
@@ -44,6 +57,7 @@ def test_full_trip_reservation():
 def test_one_way_trip_reservation():
     try:
         request = protocolo_pb2.TripRequest(
+            user_id="12345",
             trip_type="one_way",  
             origin="Curitiba",
             destination="São Paulo",
@@ -51,6 +65,18 @@ def test_one_way_trip_reservation():
             return_date="",  
             num_people=2
         )
+
+        # Validação de dados ausentes
+        if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
+            print("Erro: Dados ausentes na solicitação de viagem.")
+            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
+
+        # Validação adicional para one_way (onde a data de volta pode ser ausente)
+        if request.trip_type != "one_way" and not request.return_date:
+            print("Erro: Data de retorno ausente na solicitação de viagem.")
+            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
+
+        print("Dados da viagem validados com sucesso.")
 
         with grpc.insecure_channel('localhost:50051') as channel:
             stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
@@ -66,6 +92,7 @@ def test_one_way_trip_reservation():
 def test_missing_data_in_trip_request():
     try:
         request = protocolo_pb2.TripRequest(
+            user_id="12345",
             trip_type="round_trip",
             origin="Curitiba",
             destination="São Paulo",
@@ -73,6 +100,18 @@ def test_missing_data_in_trip_request():
             return_date="2024-10-20",
             num_people=2
         )
+
+        # Validação de dados ausentes
+        if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
+            print("Erro: Dados ausentes na solicitação de viagem.")
+            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
+
+        # Validação adicional para one_way (onde a data de volta pode ser ausente)
+        if request.trip_type != "one_way" and not request.return_date:
+            print("Erro: Data de retorno ausente na solicitação de viagem.")
+            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
+
+        print("Dados da viagem validados com sucesso.")
 
         with grpc.insecure_channel('localhost:50051') as channel:
             stub = protocolo_pb2_grpc.TravelAgencyStub(channel)

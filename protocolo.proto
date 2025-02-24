@@ -8,53 +8,68 @@ service TravelAgency {
 service Airline {
     rpc BookFlight (FlightRequest) returns (FlightResponse) {}
     rpc CancelFlight (CancelFlightRequest) returns (CancelFlightResponse) {}
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}  // Novo método
 }
 
 service Hotel {
     rpc BookHotel (HotelRequest) returns (HotelResponse) {}
     rpc CancelHotel (CancelHotelRequest) returns (CancelHotelResponse) {}
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}  // Novo método
 }
 
 service CarRental {
     rpc BookCar (CarRequest) returns (CarResponse) {}
     rpc CancelCar (CancelCarRequest) returns (CancelCarResponse) {}
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}  // Novo método
 }
 
 message TripRequest {
-    string trip_type = 1; // "one_way" ou "round_trip"
-    string origin = 2;
-    string destination = 3;
-    string departure_date = 4;
-    string return_date = 5;
-    int32 num_people = 6;
+    string user_id = 1; // ID do usuário
+    string trip_type = 2; // "one_way" ou "round_trip"
+    string origin = 3;
+    string destination = 4;
+    string departure_date = 5;
+    string return_date = 6;
+    int32 num_people = 7;
+    string start_date = 8; // Data de início da viagem
+    string end_date = 9;   // Data de término da viagem
 }
 
 message TripResponse {
     string status = 1;
     string details = 2;
+    string flight_id = 3;  // ID do voo reservado
+    string flight_number = 4; // Nome da companhia aérea
+    string hotel_id = 5;   // ID da reserva do hotel
+    string hotel_name = 6; // Nome do hotel
+    string car_id = 7;     // ID da reserva do carro
+    string car_plate = 8;   // Nome da locadora de carro
 }
 
 message CancelTripRequest {
-    string trip_id = 1;
+    string user_id = 1;
 }
 
 message CancelTripResponse {
     string status = 1;
+    string message = 2; // Mensagem informando o status do cancelamento
 }
 
 message FlightRequest {
-    string trip_type = 1;
-    string origin = 2;
-    string destination = 3;
-    string departure_date = 4;
-    string return_date = 5;
-    int32 num_people = 6;
+    string user_id = 1;  // ID do usuário que está reservando o voo
+    string trip_type = 2;
+    string origin = 3;
+    string destination = 4;
+    string departure_date = 5;
+    string return_date = 6;
+    int32 num_people = 7;
 }
 
 message FlightResponse {
     string status = 1;
     string flight_details = 2;
-    string flight_id = 3; // Adicionando o flight_id para o cancelamento
+    string flight_id = 3;   // ID do voo para cancelamento
+    string flight_number = 4; // Nome da companhia aérea
 }
 
 message CancelFlightRequest {
@@ -63,7 +78,16 @@ message CancelFlightRequest {
 
 message CancelFlightResponse {
     string status = 1;
-    string message = 2; // Mensagem para informar o status do cancelamento
+    string message = 2; // Mensagem informando o status do cancelamento
+}
+
+message CancelAllRequest {
+    string user_id = 1;  // ID do usuário para cancelar todos os voos
+}
+
+message CancelAllResponse {
+    string status = 1;
+    string message = 2; // Mensagem informando o status do cancelamento de todos os voos
 }
 
 message HotelRequest {
@@ -71,12 +95,14 @@ message HotelRequest {
     string check_in_date = 2;
     string check_out_date = 3;
     int32 num_people = 4;
+    string user_id = 5;  // ID do usuário que está reservando o hotel
 }
 
 message HotelResponse {
     string status = 1;
     string hotel_details = 2;
-    string hotel_id = 3; // Adicionando o hotel_id para o cancelamento
+    string hotel_id = 3;   // ID da reserva para cancelamento
+    string hotel_name = 4; // Nome do hotel
 }
 
 message CancelHotelRequest {
@@ -85,7 +111,7 @@ message CancelHotelRequest {
 
 message CancelHotelResponse {
     string status = 1;
-    string message = 2; // Mensagem para informar o status do cancelamento
+    string message = 2; // Mensagem informando o status do cancelamento
 }
 
 message CarRequest {
@@ -93,12 +119,14 @@ message CarRequest {
     string pick_up_date = 2;
     string drop_off_date = 3;
     int32 num_people = 4;
+    string user_id = 5;  // ID do usuário que está reservando o carro
 }
 
 message CarResponse {
     string status = 1;
     string car_details = 2;
-    string car_id = 3; // Adicionando o car_id para o cancelamento
+    string car_id = 3;   // ID do carro para cancelamento
+    string car_plate = 4; // Nome da locadora de carro
 }
 
 message CancelCarRequest {
@@ -107,5 +135,5 @@ message CancelCarRequest {
 
 message CancelCarResponse {
     string status = 1;
-    string message = 2; // Mensagem para informar o status do cancelamento
+    string message = 2; // Mensagem informando o status do cancelamento
 }

@@ -159,6 +159,11 @@ class AirlineStub(object):
                 request_serializer=protocolo__pb2.CancelFlightRequest.SerializeToString,
                 response_deserializer=protocolo__pb2.CancelFlightResponse.FromString,
                 _registered_method=True)
+        self.CancelAll = channel.unary_unary(
+                '/Airline/CancelAll',
+                request_serializer=protocolo__pb2.CancelAllRequest.SerializeToString,
+                response_deserializer=protocolo__pb2.CancelAllResponse.FromString,
+                _registered_method=True)
 
 
 class AirlineServicer(object):
@@ -176,6 +181,12 @@ class AirlineServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CancelAll(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AirlineServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -188,6 +199,11 @@ def add_AirlineServicer_to_server(servicer, server):
                     servicer.CancelFlight,
                     request_deserializer=protocolo__pb2.CancelFlightRequest.FromString,
                     response_serializer=protocolo__pb2.CancelFlightResponse.SerializeToString,
+            ),
+            'CancelAll': grpc.unary_unary_rpc_method_handler(
+                    servicer.CancelAll,
+                    request_deserializer=protocolo__pb2.CancelAllRequest.FromString,
+                    response_serializer=protocolo__pb2.CancelAllResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -254,6 +270,33 @@ class Airline(object):
             metadata,
             _registered_method=True)
 
+    @staticmethod
+    def CancelAll(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Airline/CancelAll',
+            protocolo__pb2.CancelAllRequest.SerializeToString,
+            protocolo__pb2.CancelAllResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
 
 class HotelStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -274,6 +317,11 @@ class HotelStub(object):
                 request_serializer=protocolo__pb2.CancelHotelRequest.SerializeToString,
                 response_deserializer=protocolo__pb2.CancelHotelResponse.FromString,
                 _registered_method=True)
+        self.CancelAll = channel.unary_unary(
+                '/Hotel/CancelAll',
+                request_serializer=protocolo__pb2.CancelAllRequest.SerializeToString,
+                response_deserializer=protocolo__pb2.CancelAllResponse.FromString,
+                _registered_method=True)
 
 
 class HotelServicer(object):
@@ -291,6 +339,12 @@ class HotelServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CancelAll(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_HotelServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -303,6 +357,11 @@ def add_HotelServicer_to_server(servicer, server):
                     servicer.CancelHotel,
                     request_deserializer=protocolo__pb2.CancelHotelRequest.FromString,
                     response_serializer=protocolo__pb2.CancelHotelResponse.SerializeToString,
+            ),
+            'CancelAll': grpc.unary_unary_rpc_method_handler(
+                    servicer.CancelAll,
+                    request_deserializer=protocolo__pb2.CancelAllRequest.FromString,
+                    response_serializer=protocolo__pb2.CancelAllResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -369,6 +428,33 @@ class Hotel(object):
             metadata,
             _registered_method=True)
 
+    @staticmethod
+    def CancelAll(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/Hotel/CancelAll',
+            protocolo__pb2.CancelAllRequest.SerializeToString,
+            protocolo__pb2.CancelAllResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
 
 class CarRentalStub(object):
     """Missing associated documentation comment in .proto file."""
@@ -389,6 +475,11 @@ class CarRentalStub(object):
                 request_serializer=protocolo__pb2.CancelCarRequest.SerializeToString,
                 response_deserializer=protocolo__pb2.CancelCarResponse.FromString,
                 _registered_method=True)
+        self.CancelAll = channel.unary_unary(
+                '/CarRental/CancelAll',
+                request_serializer=protocolo__pb2.CancelAllRequest.SerializeToString,
+                response_deserializer=protocolo__pb2.CancelAllResponse.FromString,
+                _registered_method=True)
 
 
 class CarRentalServicer(object):
@@ -406,6 +497,12 @@ class CarRentalServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CancelAll(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_CarRentalServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -418,6 +515,11 @@ def add_CarRentalServicer_to_server(servicer, server):
                     servicer.CancelCar,
                     request_deserializer=protocolo__pb2.CancelCarRequest.FromString,
                     response_serializer=protocolo__pb2.CancelCarResponse.SerializeToString,
+            ),
+            'CancelAll': grpc.unary_unary_rpc_method_handler(
+                    servicer.CancelAll,
+                    request_deserializer=protocolo__pb2.CancelAllRequest.FromString,
+                    response_serializer=protocolo__pb2.CancelAllResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -474,6 +576,33 @@ class CarRental(object):
             '/CarRental/CancelCar',
             protocolo__pb2.CancelCarRequest.SerializeToString,
             protocolo__pb2.CancelCarResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CancelAll(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/CarRental/CancelAll',
+            protocolo__pb2.CancelAllRequest.SerializeToString,
+            protocolo__pb2.CancelAllResponse.FromString,
             options,
             channel_credentials,
             insecure,
