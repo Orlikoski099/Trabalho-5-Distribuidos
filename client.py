@@ -255,7 +255,8 @@ def send_trip_request():
             messagebox.showinfo(
                 "Sucesso", f"Reserva realizada com sucesso!\n\nDetalhes: {response.details}")
         else:
-            messagebox.showerror("Erro", f"Erro na reserva: {response.status}")
+            messagebox.showerror(
+                "Erro", f"Erro na reserva: {response.details}")
     except grpc.RpcError as e:
         messagebox.showerror(
             "Erro", f"Falha na comunicação com o servidor: {e}")
