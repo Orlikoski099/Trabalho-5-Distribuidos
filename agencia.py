@@ -1,11 +1,19 @@
 from concurrent import futures
 import grpc
-import protocolo_pb2
-import protocolo_pb2_grpc
+import cancel_pb2
+import cancel_pb2_grpc
+import travel_pb2
+import travel_pb2_grpc
+import flight_pb2
+import flight_pb2_grpc
+import hotel_pb2
+import hotel_pb2_grpc
+import car_pb2
+import car_pb2_grpc
 from grpc import RpcError
 
 
-class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
+class TravelAgencyServicer(travel_pb2_grpc.TravelAgencyServicer):
 
     def CancelBookTrip(self, request, context):
         user_id = request.user_id
@@ -18,7 +26,7 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
         if not flight_response or not hotel_response or not car_response:
             status = "Partial Success"
 
-        return protocolo_pb2.CancelTripResponse(
+        return travel_pb2.CancelTripResponse(
             status=status,
             message=f"All trips for user {user_id} have been canceled."
         )
@@ -26,13 +34,13 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
     def BookTrip(self, request, context):
         if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
             print("Erro: Dados ausentes na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
+            return travel_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
         elif request.trip_type == "one_way" and request.return_date:
             print("Erro: Data de retorno não permitida para viagem só de ida.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno não permitida para viagem só de ida.")
+            return travel_pb2.TripResponse(status="Failure", details="Data de retorno não permitida para viagem só de ida.")
         elif request.trip_type != "one_way" and not request.return_date:
             print("Erro: Data de retorno ausente na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
+            return travel_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
 
         print("Dados da viagem validados com sucesso.")
 
@@ -47,7 +55,8 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
             try:
                 print(request.user_id)
                 flight_response = self.book_flight(request)
-                print('FLIGHT STATUS: ', flight_response.status)
+                print('FLIGHT STATUS: ', flight_response.status,
+                      flight_response.flight_details)
                 flight_id = flight_response.flight_id
                 flight_number = flight_response.flight_number
                 if flight_response.status != "Success":
@@ -59,7 +68,8 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
 
             try:
                 hotel_response = self.book_hotel(request)
-                print('HOTEL STATUS: ', hotel_response.status)
+                print('HOTEL STATUS: ', hotel_response.status,
+                      hotel_response.hotel_details)
                 hotel_id = hotel_response.hotel_id
                 hotel_name = hotel_response.hotel_name
                 if hotel_response.status != "Success":
@@ -72,7 +82,8 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
                 raise Exception("Hotel booking failed")
             try:
                 car_response = self.book_car(request)
-                print('CAR STATUS: ', car_response.status)
+                print('CAR STATUS: ', car_response.status,
+                      car_response.car_details)
                 car_id = car_response.car_id
                 car_plate = car_response.car_plate
                 if car_response.status != "Success":
@@ -87,9 +98,9 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
                 raise Exception("Car booking failed")
 
         except Exception as e:
-            return protocolo_pb2.TripResponse(status=f"Failure - {e}", details="Trip NOT booked")
+            return travel_pb2.TripResponse(status=f"Failure - {e}", details="Trip NOT booked")
 
-        return protocolo_pb2.TripResponse(
+        return travel_pb2.TripResponse(
             status="Success",
             details="Trip booked successfully",
             flight_id=flight_id,
@@ -102,52 +113,52 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
 
     def cancel_all_flights(self, user_id):
         with grpc.insecure_channel('localhost:50052') as channel:
-            stub = protocolo_pb2_grpc.AirlineStub(channel)
-            cancel_request = protocolo_pb2.CancelAllRequest(user_id=user_id)
+            stub = cancel_pb2_grpc.AirlineStub(channel)
+            cancel_request = cancel_pb2.CancelAllRequest(user_id=user_id)
             cancel_response = stub.CancelAll(cancel_request)
             return cancel_response
 
     def cancel_all_hotels(self, user_id):
         with grpc.insecure_channel('localhost:50053') as channel:
-            stub = protocolo_pb2_grpc.HotelStub(channel)
-            cancel_request = protocolo_pb2.CancelAllRequest(user_id=user_id)
+            stub = cancel_pb2_grpc.HotelStub(channel)
+            cancel_request = cancel_pb2.CancelAllRequest(user_id=user_id)
             cancel_response = stub.CancelAll(cancel_request)
             return cancel_response
 
     def cancel_all_cars(self, user_id):
         with grpc.insecure_channel('localhost:50054') as channel:
-            stub = protocolo_pb2_grpc.CarRentalStub(channel)
-            cancel_request = protocolo_pb2.CancelAllRequest(user_id=user_id)
+            stub = cancel_pb2_grpc.CarRentalStub(channel)
+            cancel_request = cancel_pb2.CancelAllRequest(user_id=user_id)
             cancel_response = stub.CancelAll(cancel_request)
             return cancel_response
 
     def cancel_flight(self, flight_id):
         with grpc.insecure_channel('localhost:50052') as channel:
-            stub = protocolo_pb2_grpc.AirlineStub(channel)
-            cancel_request = protocolo_pb2.CancelFlightRequest(
+            stub = flight_pb2_grpc.AirlineStub(channel)
+            cancel_request = flight_pb2.CancelFlightRequest(
                 flight_id=flight_id)
             cancel_response = stub.CancelFlight(cancel_request)
             return cancel_response
 
     def cancel_hotel(self, hotel_id):
         with grpc.insecure_channel('localhost:50053') as channel:
-            stub = protocolo_pb2_grpc.HotelStub(channel)
-            cancel_request = protocolo_pb2.CancelHotelRequest(
+            stub = hotel_pb2_grpc.HotelStub(channel)
+            cancel_request = hotel_pb2.CancelHotelRequest(
                 hotel_id=hotel_id)
             cancel_response = stub.CancelHotel(cancel_request)
             return cancel_response
 
     def cancel_car(self, car_id):
         with grpc.insecure_channel('localhost:50054') as channel:
-            stub = protocolo_pb2_grpc.CarRentalStub(channel)
-            cancel_request = protocolo_pb2.CancelCarRequest(car_id=car_id)
+            stub = car_pb2_grpc.CarRentalStub(channel)
+            cancel_request = car_pb2.CancelCarRequest(car_id=car_id)
             cancel_response = stub.CancelCar(cancel_request)
             return cancel_response
 
     def book_flight(self, request):
         with grpc.insecure_channel('localhost:50052') as channel:
-            stub = protocolo_pb2_grpc.AirlineStub(channel)
-            flight_request = protocolo_pb2.FlightRequest(
+            stub = flight_pb2_grpc.AirlineStub(channel)
+            flight_request = flight_pb2.FlightRequest(
                 user_id=request.user_id,
                 trip_type=request.trip_type,
                 origin=request.origin,
@@ -161,8 +172,8 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
 
     def book_hotel(self, request):
         with grpc.insecure_channel('localhost:50053') as channel:
-            stub = protocolo_pb2_grpc.HotelStub(channel)
-            hotel_request = protocolo_pb2.HotelRequest(
+            stub = hotel_pb2_grpc.HotelStub(channel)
+            hotel_request = hotel_pb2.HotelRequest(
                 user_id=request.user_id,
                 destination=request.destination,
                 check_in_date=request.departure_date,
@@ -174,8 +185,8 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
 
     def book_car(self, request):
         with grpc.insecure_channel('localhost:50054') as channel:
-            stub = protocolo_pb2_grpc.CarRentalStub(channel)
-            car_request = protocolo_pb2.CarRequest(
+            stub = car_pb2_grpc.CarRentalStub(channel)
+            car_request = car_pb2.CarRequest(
                 user_id=request.user_id,
                 destination=request.destination,
                 pick_up_date=request.departure_date,
@@ -188,7 +199,7 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    protocolo_pb2_grpc.add_TravelAgencyServicer_to_server(
+    travel_pb2_grpc.add_TravelAgencyServicer_to_server(
         TravelAgencyServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()

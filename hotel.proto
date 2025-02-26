@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "cancel.proto";
+
+service Hotel {
+    rpc BookHotel (HotelRequest) returns (HotelResponse) {}
+    rpc CancelHotel (CancelHotelRequest) returns (CancelHotelResponse) {}
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}
+}
+
+message HotelRequest {
+    string destination = 1;
+    string check_in_date = 2;
+    string check_out_date = 3;
+    int32 num_people = 4;
+    string user_id = 5;
+}
+
+message HotelResponse {
+    string status = 1;
+    string hotel_details = 2;
+    string hotel_id = 3;
+    string hotel_name = 4;
+}
+
+message CancelHotelRequest {
+    string hotel_id = 1;
+}
+
+message CancelHotelResponse {
+    string status = 1;
+    string message = 2; // Mensagem informando o status do cancelamento
+}

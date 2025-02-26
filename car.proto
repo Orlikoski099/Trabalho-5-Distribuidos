@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+import "cancel.proto";
+
+service CarRental {
+    rpc BookCar (CarRequest) returns (CarResponse) {}
+    rpc CancelCar (CancelCarRequest) returns (CancelCarResponse) {}
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}
+}
+
+message CarRequest {
+    string destination = 1;
+    string pick_up_date = 2;
+    string drop_off_date = 3;
+    int32 num_people = 4;
+    string user_id = 5;
+}
+
+message CarResponse {
+    string status = 1;
+    string car_details = 2;
+    string car_id = 3;
+    string car_plate = 4;
+}
+
+message CancelCarRequest {
+    string car_id = 1;
+}
+
+message CancelCarResponse {
+    string status = 1;
+    string message = 2;
+}

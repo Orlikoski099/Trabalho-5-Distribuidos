@@ -1,15 +1,15 @@
 import grpc
 import time
-import protocolo_pb2
-import protocolo_pb2_grpc
+import travel_pb2
+import travel_pb2_grpc
 
 
 def check_server_ready():
     while True:
         try:
             with grpc.insecure_channel('localhost:50051') as channel:
-                stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
-                stub.BookTrip(protocolo_pb2.TripRequest())
+                stub = travel_pb2_grpc.TravelAgencyStub(channel)
+                stub.BookTrip(travel_pb2.TripRequest())
             print("Servidor gRPC pronto para conexões!")
             break
         except grpc.RpcError as e:
@@ -19,7 +19,7 @@ def check_server_ready():
 
 def test_full_trip_reservation():
     try:
-        request = protocolo_pb2.TripRequest(
+        request = travel_pb2.TripRequest(
             user_id="12345",
             trip_type="round_trip",
             origin="Curitiba",
@@ -31,16 +31,16 @@ def test_full_trip_reservation():
 
         if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
             print("Erro: Dados ausentes na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
+            return travel_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
 
         if request.trip_type != "one_way" and not request.return_date:
             print("Erro: Data de retorno ausente na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
+            return travel_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
 
         print("Dados da viagem validados com sucesso.")
 
         with grpc.insecure_channel('localhost:50051') as channel:
-            stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
+            stub = travel_pb2_grpc.TravelAgencyStub(channel)
             response = stub.BookTrip(request)
 
         if response.status == "Success":
@@ -54,7 +54,7 @@ def test_full_trip_reservation():
 
 def test_one_way_trip_reservation():
     try:
-        request = protocolo_pb2.TripRequest(
+        request = travel_pb2.TripRequest(
             user_id="12345",
             trip_type="one_way",
             origin="Curitiba",
@@ -66,16 +66,16 @@ def test_one_way_trip_reservation():
 
         if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
             print("Erro: Dados ausentes na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
+            return travel_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
 
         if request.trip_type != "one_way" and not request.return_date:
             print("Erro: Data de retorno ausente na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
+            return travel_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
 
         print("Dados da viagem validados com sucesso.")
 
         with grpc.insecure_channel('localhost:50051') as channel:
-            stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
+            stub = travel_pb2_grpc.TravelAgencyStub(channel)
             response = stub.BookTrip(request)
 
         if response.status == "Success":
@@ -89,7 +89,7 @@ def test_one_way_trip_reservation():
 
 def test_missing_data_in_trip_request():
     try:
-        request = protocolo_pb2.TripRequest(
+        request = travel_pb2.TripRequest(
             user_id="12345",
             trip_type="round_trip",
             origin="Curitiba",
@@ -100,7 +100,7 @@ def test_missing_data_in_trip_request():
         )
 
         with grpc.insecure_channel('localhost:50051') as channel:
-            stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
+            stub = travel_pb2_grpc.TravelAgencyStub(channel)
             response = stub.BookTrip(request)
 
         if response.status == "Failure":

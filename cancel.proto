@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message CancelTripRequest {
+    string user_id = 1;
+}
+
+message CancelTripResponse {
+    string status = 1;
+    string message = 2;
+}
+
+message CancelAllRequest {
+    string user_id = 1;
+}
+
+message CancelAllResponse {
+    string status = 1;
+    string message = 2;
+}

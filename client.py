@@ -1,6 +1,6 @@
 import grpc
-import protocolo_pb2
-import protocolo_pb2_grpc
+import travel_pb2
+import travel_pb2_grpc
 import tkinter as tk
 from tkinter import messagebox
 
@@ -29,9 +29,9 @@ def open_cancel_window():
             return
 
         try:
-            request = protocolo_pb2.CancelTripRequest(user_id=user_id)
+            request = travel_pb2.CancelTripRequest(user_id=user_id)
             with grpc.insecure_channel('localhost:50051') as channel:
-                stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
+                stub = travel_pb2_grpc.TravelAgencyStub(channel)
                 response = stub.CancelBookTrip(request)
 
             if response.status == "Success":
@@ -93,7 +93,7 @@ def send_trip_request():
         return
 
     try:
-        request = protocolo_pb2.TripRequest(
+        request = travel_pb2.TripRequest(
             trip_type=trip_type,
             origin=origin,
             destination=destination,
@@ -104,7 +104,7 @@ def send_trip_request():
         )
 
         with grpc.insecure_channel('localhost:50051') as channel:
-            stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
+            stub = travel_pb2_grpc.TravelAgencyStub(channel)
             response = stub.BookTrip(request)
 
         if response.status == "Success":

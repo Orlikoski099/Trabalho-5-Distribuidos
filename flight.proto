@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "cancel.proto";
+
+service Airline {
+    rpc BookFlight (FlightRequest) returns (FlightResponse) {}
+    rpc CancelFlight (CancelFlightRequest) returns (CancelFlightResponse) {}
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}
+}
+
+message FlightRequest {
+    string user_id = 1;
+    string trip_type = 2;
+    string origin = 3;
+    string destination = 4;
+    string departure_date = 5;
+    string return_date = 6;
+    int32 num_people = 7;
+}
+
+message FlightResponse {
+    string status = 1;
+    string flight_details = 2;
+    string flight_id = 3;
+    string flight_number = 4;
+}
+
+message CancelFlightRequest {
+    string flight_id = 1;
+}
+
+message CancelFlightResponse {
+    string status = 1;
+    string message = 2;
+}
