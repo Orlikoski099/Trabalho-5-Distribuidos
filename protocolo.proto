@@ -8,42 +8,42 @@ service TravelAgency {
 service Airline {
     rpc BookFlight (FlightRequest) returns (FlightResponse) {}
     rpc CancelFlight (CancelFlightRequest) returns (CancelFlightResponse) {}
-    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}  // Novo método
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}
 }
 
 service Hotel {
     rpc BookHotel (HotelRequest) returns (HotelResponse) {}
     rpc CancelHotel (CancelHotelRequest) returns (CancelHotelResponse) {}
-    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}  // Novo método
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}
 }
 
 service CarRental {
     rpc BookCar (CarRequest) returns (CarResponse) {}
     rpc CancelCar (CancelCarRequest) returns (CancelCarResponse) {}
-    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}  // Novo método
+    rpc CancelAll (CancelAllRequest) returns (CancelAllResponse) {}
 }
 
 message TripRequest {
-    string user_id = 1; // ID do usuário
-    string trip_type = 2; // "one_way" ou "round_trip"
+    string user_id = 1;
+    string trip_type = 2;
     string origin = 3;
     string destination = 4;
     string departure_date = 5;
     string return_date = 6;
     int32 num_people = 7;
-    string start_date = 8; // Data de início da viagem
-    string end_date = 9;   // Data de término da viagem
+    string start_date = 8;
+    string end_date = 9;
 }
 
 message TripResponse {
     string status = 1;
     string details = 2;
-    string flight_id = 3;  // ID do voo reservado
-    string flight_number = 4; // Nome da companhia aérea
-    string hotel_id = 5;   // ID da reserva do hotel
-    string hotel_name = 6; // Nome do hotel
-    string car_id = 7;     // ID da reserva do carro
-    string car_plate = 8;   // Nome da locadora de carro
+    string flight_id = 3;
+    string flight_number = 4;
+    string hotel_id = 5;
+    string hotel_name = 6;
+    string car_id = 7;
+    string car_plate = 8;
 }
 
 message CancelTripRequest {
@@ -52,11 +52,11 @@ message CancelTripRequest {
 
 message CancelTripResponse {
     string status = 1;
-    string message = 2; // Mensagem informando o status do cancelamento
+    string message = 2;
 }
 
 message FlightRequest {
-    string user_id = 1;  // ID do usuário que está reservando o voo
+    string user_id = 1;
     string trip_type = 2;
     string origin = 3;
     string destination = 4;
@@ -68,8 +68,8 @@ message FlightRequest {
 message FlightResponse {
     string status = 1;
     string flight_details = 2;
-    string flight_id = 3;   // ID do voo para cancelamento
-    string flight_number = 4; // Nome da companhia aérea
+    string flight_id = 3;
+    string flight_number = 4;
 }
 
 message CancelFlightRequest {
@@ -78,16 +78,16 @@ message CancelFlightRequest {
 
 message CancelFlightResponse {
     string status = 1;
-    string message = 2; // Mensagem informando o status do cancelamento
+    string message = 2;
 }
 
 message CancelAllRequest {
-    string user_id = 1;  // ID do usuário para cancelar todos os voos
+    string user_id = 1;
 }
 
 message CancelAllResponse {
     string status = 1;
-    string message = 2; // Mensagem informando o status do cancelamento de todos os voos
+    string message = 2;
 }
 
 message HotelRequest {
@@ -95,14 +95,14 @@ message HotelRequest {
     string check_in_date = 2;
     string check_out_date = 3;
     int32 num_people = 4;
-    string user_id = 5;  // ID do usuário que está reservando o hotel
+    string user_id = 5;
 }
 
 message HotelResponse {
     string status = 1;
     string hotel_details = 2;
-    string hotel_id = 3;   // ID da reserva para cancelamento
-    string hotel_name = 4; // Nome do hotel
+    string hotel_id = 3;
+    string hotel_name = 4;
 }
 
 message CancelHotelRequest {

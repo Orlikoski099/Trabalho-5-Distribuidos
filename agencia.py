@@ -7,14 +7,12 @@ from grpc import RpcError
 class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
 
     def CancelBookTrip(self, request, context):
-        user_id = request.user_id  # Recupera o user_id da requisição
+        user_id = request.user_id
 
-        # Chama as funções para cancelar as viagens
         flight_response = self.cancel_all_flights(user_id)
         hotel_response = self.cancel_all_hotels(user_id)
         car_response = self.cancel_all_cars(user_id)
 
-        # Retorna uma resposta consolidada com o status de cada cancelamento
         status = "Success"
         if not flight_response or not hotel_response or not car_response:
             status = "Partial Success"
@@ -42,13 +40,12 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
         car_plate = None
 
         try:
-            # Etapa 1: Reserva do voo
             try:
                 print(request.user_id)
                 flight_response = self.book_flight(request)
                 print('FLIGHT STATUS: ', flight_response.status)
-                flight_id = flight_response.flight_id  # Salva o ID do voo
-                flight_number = flight_response.flight_number  # Salva o nome da cia aérea
+                flight_id = flight_response.flight_id
+                flight_number = flight_response.flight_number
                 if flight_response.status != "Success":
                     print("Failed to book flight")
                     raise Exception("Failed to book flight")
@@ -56,34 +53,31 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
                 print(f"Flight booking failed: {e}")
                 raise Exception("Failed to book flight")
 
-            # Etapa 2: Reserva do hotel
             try:
                 hotel_response = self.book_hotel(request)
                 print('HOTEL STATUS: ', hotel_response.status)
-                hotel_id = hotel_response.hotel_id  # Salva o ID do hotel
-                hotel_name = hotel_response.hotel_name  # Salva o nome do hotel
+                hotel_id = hotel_response.hotel_id
+                hotel_name = hotel_response.hotel_name
                 if hotel_response.status != "Success":
                     print("Failed to book hotel")
                     raise Exception("Failed to book hotel")
-            except (RpcError, Exception) as e:  # Captura erro de comunicação ou falha no hotel
-                if flight_id:  # Cancela o voo apenas se foi reservado com sucesso
+            except (RpcError, Exception) as e:
+                if flight_id:
                     self.cancel_flight(flight_id)
                 print(f"Hotel booking failed: {e}")
                 raise Exception("Hotel booking failed")
-
-            # Etapa 3: Reserva do carro
             try:
                 car_response = self.book_car(request)
                 print('CAR STATUS: ', car_response.status)
-                car_id = car_response.car_id  # Salva o ID do carro
-                car_plate = car_response.car_plate  # Salva o nome do carro
+                car_id = car_response.car_id
+                car_plate = car_response.car_plate
                 if car_response.status != "Success":
                     print("Failed to book car")
                     raise Exception("Failed to book car")
-            except (RpcError, Exception) as e:  # Captura erro de comunicação ou falha no carro
-                if hotel_id:  # Cancela o hotel apenas se foi reservado com sucesso
+            except (RpcError, Exception) as e:
+                if hotel_id:
                     self.cancel_hotel(hotel_id)
-                if flight_id:  # Cancela o voo apenas se foi reservado com sucesso
+                if flight_id:
                     self.cancel_flight(flight_id)
                 print(f"Car booking failed: {e}")
                 raise Exception("Car booking failed")
@@ -91,7 +85,6 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
         except Exception as e:
             return protocolo_pb2.TripResponse(status=f"Failure - {e}", details="Trip NOT booked")
 
-        # Retornar os dados completos, incluindo user_id e detalhes das reservas
         return protocolo_pb2.TripResponse(
             status="Success", 
             details="Trip booked successfully",
@@ -149,7 +142,7 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
         with grpc.insecure_channel('localhost:50052') as channel:
             stub = protocolo_pb2_grpc.AirlineStub(channel)
             flight_request = protocolo_pb2.FlightRequest(
-                user_id=request.user_id,  # Adicionando user_id
+                user_id=request.user_id,
                 trip_type=request.trip_type,
                 origin=request.origin, 
                 destination=request.destination,
@@ -164,7 +157,7 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
         with grpc.insecure_channel('localhost:50053') as channel:
             stub = protocolo_pb2_grpc.HotelStub(channel)
             hotel_request = protocolo_pb2.HotelRequest(
-                user_id=request.user_id,  # Adicionando user_id
+                user_id=request.user_id,
                 destination=request.destination, 
                 check_in_date=request.departure_date,
                 check_out_date=request.return_date, 
@@ -177,7 +170,7 @@ class TravelAgencyServicer(protocolo_pb2_grpc.TravelAgencyServicer):
         with grpc.insecure_channel('localhost:50054') as channel:
             stub = protocolo_pb2_grpc.CarRentalStub(channel)
             car_request = protocolo_pb2.CarRequest(
-                user_id=request.user_id,  # Adicionando user_id
+                user_id=request.user_id,
                 destination=request.destination, 
                 pick_up_date=request.departure_date,
                 drop_off_date=request.return_date, 
