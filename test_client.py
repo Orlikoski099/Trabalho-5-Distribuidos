@@ -99,16 +99,6 @@ def test_missing_data_in_trip_request():
             num_people=2
         )
 
-        if not request.user_id or not request.trip_type or not request.origin or not request.destination or not request.departure_date or not request.num_people:
-            print("Erro: Dados ausentes na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Dados ausentes na solicitação de viagem.")
-
-        if request.trip_type != "one_way" and not request.return_date:
-            print("Erro: Data de retorno ausente na solicitação de viagem.")
-            return protocolo_pb2.TripResponse(status="Failure", details="Data de retorno ausente para viagem de ida e volta.")
-
-        print("Dados da viagem validados com sucesso.")
-
         with grpc.insecure_channel('localhost:50051') as channel:
             stub = protocolo_pb2_grpc.TravelAgencyStub(channel)
             response = stub.BookTrip(request)
